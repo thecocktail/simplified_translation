@@ -1,0 +1,62 @@
+= Simplified Translation
+
+The main idea of this plugin is to keep all field translations on the same 
+table. I've worked with other Rails plugins but all of them have some caveats. 
+And I needed something really simple.
+
+== Configuration
+
+The default locale is 'en'. So if you do not define any language, or translation 
+does not exist, field_en will be returned. You can override the default locale 
+by placing the following line in one of your initializers.
+
+    SimplifiedTranslation.options[:locale] = 'es'
+
+== Example
+
+    ##
+    # Integration with Typus ...
+    #
+    Page:
+      fields:
+        list: title
+        form: title_en, title_es, title_cat, content_en, content_es, content_cat
+
+    ##
+    # db/migration/20080724111851_create_pages.rb
+    #
+    class CreatePages < ActiveRecord::Migration
+
+      def self.up
+        create_table :pages do |t|
+          t.column :title_en, :string, :default => "", :null => false
+          t.column :title_es, :string, :default => "", :null => false
+          t.column :title_cat, :string, :default => "", :null => false
+          t.column :content_en, :text, :default => "", :null => false
+          t.column :content_es, :text, :default => "", :null => false
+          t.column :content_cat, :text, :default => "", :null => false
+        end
+      end
+
+      def self.down
+        drop_table :pages
+      end
+
+    end
+
+    ##
+    # app/models/page.rb
+    #
+    class Page < ActiveRecord::Base
+      translate :title, :body
+    end
+
+    $ script/console
+    Loading development environment (Rails 2.1.0)
+    >> Page.find(1).title
+    => "Welcome"
+    >> GetText.set_locale 'es'
+    >> Page.find(1).title
+    => "Bienvenido"
+
+Copyright (c) 2008 Francesc Esplugas Marti, released under the MIT license
