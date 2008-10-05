@@ -86,7 +86,7 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
     SimplifiedTranslation.default_locale = 'es'
     SimplifiedTranslation.locale = 'undefined'
     page = Page.find(:first)
-    assert_equal page.send("title_es"), page.title
+    assert_equal page.title, page.send("title_es")
   end
 
   def test_should_set_title_and_set_it_on_title_en
