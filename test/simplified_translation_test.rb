@@ -41,6 +41,8 @@ end
 class SimplifiedTranslationTest < Test::Unit::TestCase
 
   def setup
+    SimplifiedTranslation.default_locale = 'en'
+    SimplifiedTranslation.locale = 'en'
     setup_db
     Page.create :title_en => "About", 
                 :title_es => "Acerca", 
@@ -49,7 +51,6 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
   end
 
   def teardown
-    GetText.set_locale 'en'
     teardown_db
   end
 
@@ -59,7 +60,7 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
   end
 
   def test_should_get_title_es_of_the_page
-    GetText.set_locale 'es'
+    SimplifiedTranslation.locale = 'es'
     page = Page.find(:first)
     assert_equal page.title, page.send("title_es")
   end
@@ -70,22 +71,36 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
   end
 
   def test_should_get_body_es_of_the_page
-    GetText.set_locale 'es'
+    SimplifiedTranslation.locale = 'es'
     page = Page.find(:first)
     assert_equal page.body, page.send("body_es")
   end
 
   def test_should_return_title_en_when_undefined_locale
-    GetText.set_locale 'undefined'
+    SimplifiedTranslation.locale = 'undefined'
     page = Page.find(:first)
     assert_equal page.title, page.send("title_en")
   end
 
   def test_should_return_title_es_because_is_the_default_locale
-    SimplifiedTranslation.options[:locale] = 'es'
-    GetText.set_locale 'undefined'
+    SimplifiedTranslation.default_locale = 'es'
+    SimplifiedTranslation.locale = 'undefined'
     page = Page.find(:first)
-    assert_equal page.title, page.send("title_es")
+    assert_equal page.send("title_es"), page.title
+  end
+
+  def test_should_set_title_and_set_it_on_title_en
+    page = Page.find(:first)
+    page.title = 'Chunky Bacon'
+    assert_equal page.title, page.send('title_en')
+  end
+
+  def test_should_set_title_and_save_it_on_title_en
+    page = Page.find(:first)
+    page.title = 'Chunky Bacon'
+    page.save
+    page = Page.find(:first)
+    assert_equal "Chunky Bacon", page.send('title_en')
   end
 
 end

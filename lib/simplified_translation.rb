@@ -1,8 +1,10 @@
 module SimplifiedTranslation
 
-  @@options = { :locale => 'en' }
+  @@default_locale = 'en-US'
+  mattr_accessor :default_locale
 
-  mattr_reader :options
+  @@locale = 'en-US'
+  mattr_accessor :locale
 
   def self.included(base)
     base.extend(ClassMethods)
@@ -10,28 +12,26 @@ module SimplifiedTranslation
 
   module ClassMethods
 
-    def translate(*options)
+    def translate(*args)
 
-      columns = []
+      args.each do |arg|
 
-      options.each do |option|
-        columns << option if option.is_a? Symbol
-      end
-
-      mod = Module.new do |m|
-        columns.each do |column|
-          define_method("#{column}") do
-            lang = GetText.locale.language
-            begin
-              send("#{column}_#{lang}").empty? ? send("#{column}_#{SimplifiedTranslation.options[:locale]}") : send("#{column}_#{lang}")
-            rescue
-              send("#{column}_#{SimplifiedTranslation.options[:locale]}")
-            end
+        define_method(arg.to_s) do
+          attribute = "#{arg}_#{SimplifiedTranslation.locale}"
+          default_attribute = "#{arg}_#{SimplifiedTranslation.default_locale}"
+          begin
+            return send(attribute).empty? ? send(default_attribute) : send(attribute)
+          rescue
+            return send(default_attribute)
           end
         end
-      end
 
-      include mod
+        define_method(arg.to_s + "=") do |data|
+          attribute = "#{arg}_#{SimplifiedTranslation.locale}"
+          write_attribute attribute, data if self.respond_to? attribute
+        end
+
+      end
 
     end
 
