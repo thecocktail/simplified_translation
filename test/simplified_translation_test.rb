@@ -8,16 +8,20 @@ ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memo
 
 def setup_db
 
-  ActiveRecord::Schema.define(:version => 1) do
+  silence_stream(STDOUT) do
 
-    ##
-    # Pages Table
-    #
-    create_table :pages, :force => true do |t|
-      t.string :title_en, :default => "", :null => false
-      t.string :title_es, :default => "", :null => false
-      t.text :body_en, :default => "", :null => false
-      t.text :body_es, :default => "", :null => false
+    ActiveRecord::Schema.define(:version => 1) do
+
+      ##
+      # Pages Table
+      #
+      create_table :pages, :force => true do |t|
+        t.string :title_en, :default => "", :null => false
+        t.string :title_es, :default => "", :null => false
+        t.text :body_en, :default => "", :null => false
+        t.text :body_es, :default => "", :null => false
+      end
+
     end
 
   end
