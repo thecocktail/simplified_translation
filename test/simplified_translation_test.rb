@@ -103,4 +103,12 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
     assert_equal "Chunky Bacon", page.send('title_en')
   end
 
+  def test_should_not_set_title_if_locale_doesnt_exist
+    SimplifiedTranslation.locale = 'undefined'
+    page = Page.find(:first)
+    page.title = 'Chunky Bacon'
+    page.save
+    assert_equal 'About', page.send('title_en')
+  end
+
 end
