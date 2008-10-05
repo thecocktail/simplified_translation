@@ -1,16 +1,18 @@
 = Simplified Translation
 
-The main idea of this plugin is to keep all field translations on the same 
-table. I've worked with other Rails plugins but all of them have some caveats. 
-And I needed something really simple.
+The main idea of this plugin is to keep all field translations on the 
+same table. I've worked with other Rails plugins but all of them have 
+some caveats, and I needed something really simple.
 
 == Configuration
 
-The default locale is 'en'. So if you do not define any language, or translation 
-does not exist, field_en will be returned. You can override the default locale 
-by placing the following line in one of your initializers.
+You can define a default locale so if the language is not defined 
+you'll get this field as the translation.
 
-    SimplifiedTranslation.options[:locale] = 'es'
+    SimplifiedTranslation.default_locale = 'es'
+    SimplifiedTranslation.locale = 'es'
+
+By default is set to 'en-US'.
 
 == Example
 
@@ -53,10 +55,24 @@ by placing the following line in one of your initializers.
 
     $ script/console
     Loading development environment (Rails 2.1.0)
-    >> Page.find(1).title
-    => "Welcome"
-    >> GetText.set_locale 'es'
-    >> Page.find(1).title
-    => "Bienvenido"
+    >> SimplifiedTranslation.default_locale = 'en'
+    => "en"
+    >> SimplifiedTranslation.locale = 'en'
+    => "en"
+    >> Page.first.title
+    => "Hello World"
+    >> SimplifiedTranslation.locale = 'es'
+    => "es"
+    >> Page.first.title
+    => "Hola undo"
+    >> Page.first.update_attributes :title => "Hola Mundo"
+    => true
+    >> Page.first.title
+    => "Hola Mundo"
+    >> SimplifiedTranslation.locale = 'undefined'
+    => "undefined"
+    >> Page.first.title
+    => "Hello World"      <-- Because is the default locale
+
 
 Copyright (c) 2008 Francesc Esplugas Marti, released under the MIT license
