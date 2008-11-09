@@ -1,9 +1,9 @@
 module SimplifiedTranslation
 
-  @@default_locale = 'en-US'
+  @@default_locale = 'en'
   mattr_accessor :default_locale
 
-  @@locale = 'en-US'
+  @@locale = 'en'
   mattr_accessor :locale
 
   def self.included(base)

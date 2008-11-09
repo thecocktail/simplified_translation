@@ -49,37 +49,37 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
 
   def test_should_get_title_en_of_the_page
     page = Page.find(:first)
-    assert_equal page.name, page.send('name_en')
+    assert_equal page.send('name_en'), page.name
   end
 
   def test_should_get_title_es_of_the_page
     SimplifiedTranslation.locale = 'es'
     page = Page.find(:first)
-    assert_equal page.name, page.send('name_es')
+    assert_equal page.send('name_es'), page.name
   end
 
   def test_should_get_body_en_of_the_page
     page = Page.find(:first)
-    assert_equal page.body, page.send('body_en')
+    assert_equal page.send('body_en'), page.body
   end
 
   def test_should_get_body_es_of_the_page
     SimplifiedTranslation.locale = 'es'
     page = Page.find(:first)
-    assert_equal page.body, page.send('body_es')
+    assert_equal page.send('body_es'), page.body
   end
 
   def test_should_return_title_en_when_undefined_locale
     SimplifiedTranslation.locale = 'undefined'
     page = Page.find(:first)
-    assert_equal page.name, page.send('name_en')
+    assert_equal page.send('name_en'), page.name
   end
 
   def test_should_return_title_es_because_is_the_default_locale
     SimplifiedTranslation.default_locale = 'es'
     SimplifiedTranslation.locale = 'undefined'
     page = Page.find(:first)
-    assert_equal page.name, page.send('name_es')
+    assert_equal page.send('name_es'), page.name
   end
 
 end

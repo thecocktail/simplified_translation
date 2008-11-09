@@ -12,7 +12,7 @@ you'll get this field as the translation.
     SimplifiedTranslation.default_locale = 'es'
     SimplifiedTranslation.locale = 'es'
 
-By default is set to 'en-US'.
+By default is set to 'en'.
 
 == Example
 
