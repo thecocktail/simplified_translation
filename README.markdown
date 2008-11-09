@@ -30,12 +30,13 @@ using an initializer.
 
       def self.up
         create_table :pages do |t|
-          t.column :title_en, :string, :default => "", :null => false
-          t.column :title_es, :string, :default => "", :null => false
-          t.column :title_cat, :string, :default => "", :null => false
-          t.column :content_en, :text, :default => "", :null => false
-          t.column :content_es, :text, :default => "", :null => false
-          t.column :content_cat, :text, :default => "", :null => false
+          t.string :title_en, :null => false
+          t.string :title_es, :null => false
+          t.string :title_cat, :null => false
+          t.text :content_en, :null => false
+          t.text :content_es, :null => false
+          t.text :content_cat, :null => false
+          t.boolean :status, :null => false, :default => false
         end
       end
 
