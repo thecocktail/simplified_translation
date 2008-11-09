@@ -1,10 +1,10 @@
-= Simplified Translation
+# Simplified Translation
 
 The main idea of this plugin is to keep all field translations on the 
 same table. I've worked with other Rails plugins but all of them have 
 some caveats, and I needed something really simple.
 
-== Configuration
+## Configuration
 
 You can define a default locale so if the language is not defined 
 you'll get this field as the translation.
@@ -12,21 +12,20 @@ you'll get this field as the translation.
     SimplifiedTranslation.default_locale = 'es'
     SimplifiedTranslation.locale = 'es'
 
-By default is set to 'en'.
+By default `locale` is set to `en`, you can override this settings 
+using an initializer.
 
-== Example
+## Example
 
-    ##
-    # Integration with Typus ...
-    #
+### Integration with Typus
+
     Page:
       fields:
         list: title
         form: title_en, title_es, title_cat, content_en, content_es, content_cat
 
-    ##
-    # db/migration/20080724111851_create_pages.rb
-    #
+### Migration
+
     class CreatePages < ActiveRecord::Migration
 
       def self.up
@@ -46,12 +45,13 @@ By default is set to 'en'.
 
     end
 
-    ##
-    # app/models/page.rb
-    #
+### Model definition
+
     class Page < ActiveRecord::Base
       translate :title, :body
     end
+
+## Usage
 
     $ script/console
     Loading development environment (Rails 2.1.0)
