@@ -11,8 +11,8 @@ def setup_db
   silence_stream(STDOUT) do
     ActiveRecord::Schema.define(:version => 1) do
       create_table :pages, :force => true do |t|
-        t.string :title_en, :default => "", :null => false
-        t.string :title_es, :default => "", :null => false
+        t.string :name_en, :default => "", :null => false
+        t.string :name_es, :default => "", :null => false
         t.text :body_en, :default => "", :null => false
         t.text :body_es, :default => "", :null => false
       end
@@ -28,57 +28,58 @@ def teardown_db
 end
 
 class Page < ActiveRecord::Base
-  translate :title, :body
+  translate :name, :body
 end
 
 class SimplifiedTranslationTest < Test::Unit::TestCase
 
   def setup
     setup_db
-    Page.create :title_en => "About", 
-                :title_es => "Acerca", 
-                :body_en => "Content of the page.", 
-                :body_es => "Contenido de la página."
+    Page.create :name_en => "Name", 
+                :name_es => "Nombre", 
+                :body_en => "Content", 
+                :body_es => "Contenido"
+    SimplifiedTranslation.default_locale = 'en'
+    SimplifiedTranslation.locale = 'en'
   end
 
   def teardown
-    GetText.set_locale 'en'
     teardown_db
   end
 
   def test_should_get_title_en_of_the_page
     page = Page.find(:first)
-    assert_equal page.title, page.send("title_en")
+    assert_equal page.name, page.send('name_en')
   end
 
   def test_should_get_title_es_of_the_page
-    GetText.set_locale 'es'
+    SimplifiedTranslation.locale = 'es'
     page = Page.find(:first)
-    assert_equal page.title, page.send("title_es")
+    assert_equal page.name, page.send('name_es')
   end
 
   def test_should_get_body_en_of_the_page
     page = Page.find(:first)
-    assert_equal page.body, page.send("body_en")
+    assert_equal page.body, page.send('body_en')
   end
 
   def test_should_get_body_es_of_the_page
-    GetText.set_locale 'es'
+    SimplifiedTranslation.locale = 'es'
     page = Page.find(:first)
-    assert_equal page.body, page.send("body_es")
+    assert_equal page.body, page.send('body_es')
   end
 
   def test_should_return_title_en_when_undefined_locale
-    GetText.set_locale 'undefined'
+    SimplifiedTranslation.locale = 'undefined'
     page = Page.find(:first)
-    assert_equal page.title, page.send("title_en")
+    assert_equal page.name, page.send('name_en')
   end
 
   def test_should_return_title_es_because_is_the_default_locale
-    SimplifiedTranslation.options[:locale] = 'es'
-    GetText.set_locale 'undefined'
+    SimplifiedTranslation.default_locale = 'es'
+    SimplifiedTranslation.locale = 'undefined'
     page = Page.find(:first)
-    assert_equal page.title, page.send("title_es")
+    assert_equal page.name, page.send('name_es')
   end
 
 end
