@@ -4,16 +4,61 @@ The main idea of this plugin is to keep all field translations on the
 same table. I've worked with other Rails plugins but all of them have 
 some caveats, and I needed something really simple.
 
-## Example
+With the release of Rails 2.2.X, with the I18n integrated now it's 
+easier to translate an Rails application, GetText is no longer needed.
 
-### Integration with Typus
+## Quick explanation
 
-    Page:
-      fields:
-        list: title
-        form: title_en, title_es, title_cat, content_en, content_es, content_cat
+We have a page model with the following attributes.
 
-### Migration
+    Page: title_en, title_cat, title_es
+
+By default Rails defines the current locale as `:en` and the default 
+locale to `:en`. If we add "translate :title" to our model we can get 
+the content of the attribute without defining the locale, and we'll 
+get the localized field.
+
+    @page_title = Page.find(:first).title
+
+We can change the locale with `I18n.locale`.
+
+    I18n.locale = :cat
+    @page_title = Page.find(:first).title
+
+And we'll get the `title` attribute of the defined locale.
+
+## Large example
+
+    ##
+    # app/views/welcome/index.html.erb
+    #
+    <%=t "Today is {{value}}.", :value => Date.today %>
+
+    ##
+    # app/controllers/welcome_controller.rb
+    #
+    class WelcomeController < ApplicationController
+
+      def index
+        @text = translate "Today is {{value}}.", :value => Date.today
+      end
+
+    end
+
+    ##
+    # app/controllers/application.rb
+    #
+    class ApplicationController < ActionController::Base
+
+      before_filter :set_locale
+
+      def set_locale
+        I18n.locale = params[:locale] || 'es'
+      end
+
+    end
+
+### Sample migration
 
     class CreatePages < ActiveRecord::Migration
 
@@ -37,11 +82,14 @@ some caveats, and I needed something really simple.
 
 ### Model definition
 
+    ##
+    # app/models/page.rg
+    #
     class Page < ActiveRecord::Base
       translate :title, :body
     end
 
-## Usage
+## Usage from the console
 
     $ script/console
     Loading development environment (Rails 2.2.2)
