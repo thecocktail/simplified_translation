@@ -1,7 +1,6 @@
 require 'test/unit'
 require 'rubygems'
 require 'active_record'
-require 'gettext'
 require 'simplified_translation'
 
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
@@ -39,8 +38,8 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
                 :name_es => "Nombre", 
                 :body_en => "Content", 
                 :body_es => "Contenido"
-    SimplifiedTranslation.default_locale = 'en'
-    SimplifiedTranslation.locale = 'en'
+    I18n.default_locale = :en
+    I18n.locale = :en
   end
 
   def teardown
@@ -53,7 +52,7 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
   end
 
   def test_should_get_title_es_of_the_page
-    SimplifiedTranslation.locale = 'es'
+    I18n.locale = :es
     page = Page.find(:first)
     assert_equal page.send('name_es'), page.name
   end
@@ -64,20 +63,20 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
   end
 
   def test_should_get_body_es_of_the_page
-    SimplifiedTranslation.locale = 'es'
+    I18n.locale = :es
     page = Page.find(:first)
     assert_equal page.send('body_es'), page.body
   end
 
   def test_should_return_title_en_when_undefined_locale
-    SimplifiedTranslation.locale = 'undefined'
+    I18n.locale = :undefined
     page = Page.find(:first)
     assert_equal page.send('name_en'), page.name
   end
 
   def test_should_return_title_es_because_is_the_default_locale
-    SimplifiedTranslation.default_locale = 'es'
-    SimplifiedTranslation.locale = 'undefined'
+    I18n.default_locale = :es
+    I18n.locale = :undefined
     page = Page.find(:first)
     assert_equal page.send('name_es'), page.name
   end
