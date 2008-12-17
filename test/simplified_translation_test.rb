@@ -27,7 +27,7 @@ def teardown_db
 end
 
 class Page < ActiveRecord::Base
-  translate :name, :body
+  translate :name, 'body'
 end
 
 class SimplifiedTranslationTest < Test::Unit::TestCase
