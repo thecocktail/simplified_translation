@@ -11,10 +11,10 @@ from the models, views and controllers.
 
     fesplugas@sueisfine:test_i18n $ rake -T i18n
     (in /home/fesplugas/projects/simplified_plugins)
-    rake i18n:autofill  # Autofill missing translations
-    rake i18n:locales   # List current locales
-    rake i18n:missing   # List missing translation strings
-    rake i18n:update    # Update translations files
+    rake locales:autofill  # Autofill missing translations
+    rake locales:list      # List current locales
+    rake locales:missing   # List missing translation strings
+    rake locales:update    # Update locale files
 
 ## Quick explanation
 
