@@ -26,7 +26,7 @@ module I18n
 
   def self.missing_locales(folder = "#{RAILS_ROOT}/config/locales")
     Dir[ File.join(folder, '*.yml') ].each do |file|
-      basename = File.basename(file, ".yml")
+      basename = File.basename(file, '.yml')
       missing = ["[#{file}]"]
       content = YAML.load_file(file)
       content[basename].each do |key, value|
@@ -38,7 +38,7 @@ module I18n
 
   def self.autofill_locales(folder = "#{RAILS_ROOT}/config/locales")
     Dir[ File.join(folder, '*.yml') ].each do |file|
-      basename = File.basename(file, ".yml")
+      basename = File.basename(file, '.yml')
       missing = ["[#{file}]"]
       content = YAML.load_file(file)
       content[basename].each do |key, value|

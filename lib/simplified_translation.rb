@@ -20,7 +20,7 @@ module SimplifiedTranslation
           end
         end
 
-        define_method(arg.to_s + "=") do |data|
+        define_method(arg.to_s + '=') do |data|
           attribute = "#{arg}_#{I18n.locale}"
           write_attribute attribute, data if self.respond_to? attribute
         end

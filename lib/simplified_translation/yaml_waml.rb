@@ -1,6 +1,6 @@
 # stolen from Kakutani Shintaro http://github.com/kakutani/yaml_waml
 
-require "yaml"
+require 'yaml'
 
 class String
   def is_binary_data?
@@ -15,7 +15,7 @@ module YamlWaml
                  when StringIO then orig_yamled.string
                  else return orig_yamled
                  end
-    yamled_str.gsub!(/\\x(\w{2})/){[$1].pack("H2")}
+    yamled_str.gsub!(/\\x(\w{2})/){[$1].pack('H2')}
     return yamled_str
   end
   module_function :decode
