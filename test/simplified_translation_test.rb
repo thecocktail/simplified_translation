@@ -34,10 +34,17 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
 
   def setup
     setup_db
+    
     Page.create :name_en => "Name", 
                 :name_es => "Nombre", 
                 :body_en => "Content", 
                 :body_es => "Contenido"
+
+    Page.create :name_en => "Second Name",
+                :name_es => "Nombre",
+                :body_en => "Second Content",
+                :body_es => "Segundo Contenido"
+    
     I18n.default_locale = :en
     I18n.locale = :en
   end
@@ -80,5 +87,33 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
     page = Page.find(:first)
     assert_equal page.send('name_es'), page.name
   end
+ 
+  def test_should_find_by_translated_attribute
+    I18n.locale = :es
+    page = Page.find_by_name('Nombre')
+    assert_equal page.name , 'Nombre'
 
+    I18n.locale = :en
+    page2 = Page.find_by_name('Name')
+    assert_equal page.name, 'Name'
+    assert_equal page.body, 'Content'
+  end
+
+  require 'ruby-debug'
+  
+  def test_should_find_with_options
+    I18n.locale = :es
+    pages = Page.find_all_by_name('Nombre')
+    assert_equal pages.length , 2
+
+#    FIXME!
+#    I18n.locale = :es
+#    pages = Page.find_all_by_name('Nombre', :limit => 1)
+#    assert_equal pages.length , 1
+
+    I18n.locale = :en
+    pages = Page.find_all_by_name('Name')
+    assert_equal pages.length , 1
+  end
+    
 end
