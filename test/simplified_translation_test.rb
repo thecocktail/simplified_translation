@@ -1,6 +1,8 @@
 require 'test/unit'
 require 'rubygems'
 require 'active_record'
+
+$LOAD_PATH << File.expand_path("#{File.dirname(__FILE__)}/../lib")
 require 'simplified_translation'
 
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
@@ -14,6 +16,7 @@ def setup_db
         t.string :name_es, :default => "", :null => false
         t.text :body_en, :default => "", :null => false
         t.text :body_es, :default => "", :null => false
+        t.datetime :created_at
       end
     end
   end
@@ -38,12 +41,14 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
     Page.create :name_en => "Name", 
                 :name_es => "Nombre", 
                 :body_en => "Content", 
-                :body_es => "Contenido"
+                :body_es => "Contenido",
+                :created_at => Time.now - 60
 
     Page.create :name_en => "Second Name",
                 :name_es => "Nombre",
                 :body_en => "Second Content",
-                :body_es => "Segundo Contenido"
+                :body_es => "Segundo Contenido",
+                :created_at => Time.now
     
     I18n.default_locale = :en
     I18n.locale = :en
@@ -99,17 +104,25 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
     assert_equal page.body, 'Content'
   end
 
-  require 'ruby-debug'
-  
   def test_should_find_with_options
     I18n.locale = :es
     pages = Page.find_all_by_name('Nombre')
     assert_equal pages.length , 2
+ 
+    I18n.locale = :es
+    pages = Page.find_all_by_name('Nombre', :limit => 1)
+    assert_equal pages.length , 1
+    
+    I18n.locale = :es
+    pages = Page.find_all_by_name('Nombre', :limit => 1, :order => "created_at desc")
+    assert_equal pages.length , 1
+    assert_equal pages[0].body, "Segundo Contenido"
 
-#    FIXME!
-#    I18n.locale = :es
-#    pages = Page.find_all_by_name('Nombre', :limit => 1)
-#    assert_equal pages.length , 1
+    I18n.locale = :es
+    pages = Page.find_all_by_name('Nombre', :limit => 1, :order => "created_at asc")
+    assert_equal pages.length , 1
+    assert_equal pages[0].body, "Contenido"
+
 
     I18n.locale = :en
     pages = Page.find_all_by_name('Name')
