@@ -38,11 +38,13 @@ module SimplifiedTranslation
               attribute = "#{$2}_#{I18n.locale.to_s}"
               send("find_#{modifier}_#{attribute}".to_sym, *args)
             end
+          else
+            super
           end
-        end 
         end 
       end 
     end 
+  end
 end 
 
 ActiveRecord::Base.send :include, SimplifiedTranslation::Translated

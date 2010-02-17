@@ -128,5 +128,11 @@ class SimplifiedTranslationTest < Test::Unit::TestCase
     pages = Page.find_all_by_name('Name')
     assert_equal pages.length , 1
   end
-    
+
+  def test_wront_method_should_raise_nomethod_error
+    assert_raise NoMethodError do
+      Page.wadus_wadus
+    end
+  end
 end
+
